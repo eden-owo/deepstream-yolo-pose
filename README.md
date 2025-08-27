@@ -180,6 +180,7 @@ wget https://github.com/ultralytics/assets/releases/download/v0.0.0/yolov8s-pose
   - :warning: Must be bound to a hardware device, please put it on your edge device(It's a long wait :hourglass:) 
   - Specify parameters such as `-minShapes --optShapes --maxShapes` to set dynamic batch processing.
   ```shell
+  # For nvidia jetson
   cd /opt/nvidia/deepstream/deepstream/samples/models/tao_pretrained_models/YOLOv8-TensorRT 
   sudo /usr/src/tensorrt/bin/trtexec --verbose \
       --onnx=yolov8s-pose-dy-sim-640.onnx \
@@ -189,7 +190,21 @@ wget https://github.com/ultralytics/assets/releases/download/v0.0.0/yolov8s-pose
       --optShapes=images:12x3x640x640 \
       --maxShapes=images:16x3x640x640 \
       --saveEngine=yolov8s-pose-dy-sim-640.engine
-  ``` 
+  ```
+  ```shell
+  # For nvidia GTX1650
+  cd /opt/nvidia/deepstream/deepstream/samples/models/tao_pretrained_models/YOLOv8-TensorRT 
+  sudo /usr/src/tensorrt/bin/trtexec --verbose \
+    --onnx=yolov8s-pose-dy-sim-640.onnx \
+    --fp16 \
+    --memPoolSize=workspace:2048MiB \
+    --shapes=images:4x3x640x640 \
+    --tacticSources=-cublasLt,+cublas,+cudnn \
+    --builderOptimizationLevel=3 \
+    --iterations=0 --warmUp=0 --duration=0 \
+    --saveEngine=yolov8s-pose-b4-fp16.engine
+
+  ```
 
 ### 3. Test and Check Tensortrt Engine
 
