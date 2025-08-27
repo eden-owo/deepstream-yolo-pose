@@ -192,17 +192,18 @@ wget https://github.com/ultralytics/assets/releases/download/v0.0.0/yolov8s-pose
       --saveEngine=yolov8s-pose-dy-sim-640.engine
   ```
   ```shell
-  # For nvidia GTX1650
+  # For nvidia GTX1650 (fp32) (due to fp16 tactic fail)
   cd /opt/nvidia/deepstream/deepstream/samples/models/tao_pretrained_models/YOLOv8-TensorRT 
   sudo /usr/src/tensorrt/bin/trtexec --verbose \
-    --onnx=yolov8s-pose-dy-sim-640.onnx \
-    --fp16 \
-    --memPoolSize=workspace:2048MiB \
-    --shapes=images:4x3x640x640 \
-    --tacticSources=-cublasLt,+cublas,+cudnn \
-    --builderOptimizationLevel=3 \
-    --iterations=0 --warmUp=0 --duration=0 \
-    --saveEngine=yolov8s-pose-b4-fp16.engine
+      --onnx=yolov8s-pose-dy-sim-640.onnx \
+      --memPoolSize=workspace:2048MiB \
+      --minShapes=images:1x3x640x640 \
+      --optShapes=images:2x3x640x640 \
+      --maxShapes=images:4x3x640x640 \
+      --builderOptimizationLevel=3 \
+      --iterations=0 --warmUp=0 --duration=0 \
+      --saveEngine=yolov8s-pose-dyn1-4-fp32.engine
+
 
   ```
 
